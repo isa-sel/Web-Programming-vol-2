@@ -18,15 +18,5 @@ class TeamPlayerDao extends BaseDao {
     return $stmt->fetchAll();
   }
 
-  public function insertTeamPlayer(array $data): int {
-    return $this->insert($data);
-  }
-  public function updateTeamPlayer(int $id, array $data): bool {
-    return $this->update($id, $data);
-  }
-  public function deleteTeamPlayer(int $id): bool {
-    return $this->delete($id);
-  }
-
 
 }

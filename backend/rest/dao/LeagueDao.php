@@ -13,15 +13,5 @@ class LeagueDao extends BaseDao {
     return $this->connection->query($sql)->fetchAll();
   }
 
-   public function insertLeague(array $data): int {
-  return $this->insert($data);
-  }
-  public function updateLeague(int $id, array $data): bool {
-    return $this->update($id, $data);
-  }
-  public function deleteLeague(int $id): bool {
-    return $this->delete($id);
-  }
-
 
 }

@@ -10,16 +10,6 @@ class PlayersDao extends BaseDao {
     return $stmt->fetchAll();
   }
   
-  public function insertPlayer(array $data): int {
-    return $this->insert($data);
-  }
-  public function updatePlayer(int $id, array $data): bool {
-    return $this->update($id, $data);
-  }
-  public function deletePlayer(int $id): bool {
-    return $this->delete($id);
-  }
-
 
 }
 

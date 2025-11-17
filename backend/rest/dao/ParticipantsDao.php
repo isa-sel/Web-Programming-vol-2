@@ -12,15 +12,5 @@ class ParticipantsDao extends BaseDao {
     return $stmt->fetchAll();
   }
 
-  public function insertParticipant(array $data): int {
-    return $this->insert($data);
-  }
-  public function updateParticipant(int $id, array $data): bool {
-    return $this->update($id, $data);
-  }
-  public function deleteParticipant(int $id): bool {
-    return $this->delete($id);
-  }
-
 
 }

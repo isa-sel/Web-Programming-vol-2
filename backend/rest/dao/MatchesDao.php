@@ -19,15 +19,5 @@ class MatchesDao extends BaseDao {
     return $stmt->fetchAll();
   }
 
-  public function insertMatch(array $data): int {
-    return $this->insert($data);
-  }
-  public function updateMatch(int $id, array $data): bool {
-    return $this->update($id, $data);
-  }
-  public function deleteMatch(int $id): bool {
-    return $this->delete($id);
-  }
-
 
 }
