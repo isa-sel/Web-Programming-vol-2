@@ -9,24 +9,24 @@ class PlayersService extends BaseService
         $dao = new PlayersDao();
         parent::__construct($dao);
     }
-
+/*
     public function getAll() {
-        return $this->get_all();
+        return $this->getAll();
     }
 
-    public function getById(int $id) {
-        return $this->get_by_id($id);
+    public function getById($id) {
+        return $this->getById($id);
     }
-
-    public function insertPlayer(array $data) {
+*/
+    public function insertPlayer($data) {
         return $this->insert($data);
     }
 
-    public function updatePlayer(int $id, array $data) {
+    public function updatePlayer($id, $data) {
         return $this->update($data, $id);
     }
 
-    public function deletePlayer(int $id) {
+    public function deletePlayer($id) {
         return $this->delete($id);
     }
 }

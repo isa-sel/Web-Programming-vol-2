@@ -87,6 +87,7 @@ Flight::route('GET /participants/@id', function($id) {
  * )
  */
 Flight::route('POST /participants', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::participantsService()->insertParticipant($data));
 });
@@ -128,6 +129,7 @@ Flight::route('POST /participants', function() {
  * )
  */
 Flight::route('PUT /participants/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::participantsService()->updateParticipant((int)$id, $data));
 });
@@ -161,5 +163,6 @@ Flight::route('PUT /participants/@id', function($id) {
  * )
  */
 Flight::route('DELETE /participants/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::participantsService()->deleteParticipant((int)$id));
 });

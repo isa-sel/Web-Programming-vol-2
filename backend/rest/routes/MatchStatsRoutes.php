@@ -80,6 +80,7 @@ Flight::route('GET /match-stats/@id', function($id) {
  * )
  */
 Flight::route('POST /match-stats', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchStatsService()->insertMatchStats($data));
 });
@@ -123,6 +124,7 @@ Flight::route('POST /match-stats', function() {
  * )
  */
 Flight::route('PUT /match-stats/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchStatsService()->updateMatchStats((int)$id, $data));
 });
@@ -155,5 +157,6 @@ Flight::route('PUT /match-stats/@id', function($id) {
  * )
  */
 Flight::route('DELETE /match-stats/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::matchStatsService()->deleteMatchStats((int)$id));
 });

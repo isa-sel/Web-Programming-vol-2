@@ -66,6 +66,7 @@ Flight::route('GET /teams/@team_id/roster', function($team_id) {
  * )
  */
 Flight::route('POST /team-player', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::teamPlayerService()->insertTeamPlayer($data));
 });
@@ -107,6 +108,7 @@ Flight::route('POST /team-player', function() {
  * )
  */
 Flight::route('PUT /team-player/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::teamPlayerService()->updateTeamPlayer((int)$id, $data));
 });
@@ -140,5 +142,6 @@ Flight::route('PUT /team-player/@id', function($id) {
  * )
  */
 Flight::route('DELETE /team-player/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::teamPlayerService()->deleteTeamPlayer((int)$id));
 });

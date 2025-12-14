@@ -1,5 +1,27 @@
 <?php
 use OpenApi\Annotations as OA;
+
+
+/**
+ * @OA\Get(
+ *     path="/matches",
+ *     tags={"matches"},
+ *     summary="Get all matches",
+ *     @OA\Response(
+ *         response=200,
+ *         description="List of all matches",
+ *         @OA\JsonContent(
+ *             type="array",
+ *             @OA\Items(ref="#/components/schemas/Match")
+ *         )
+ *     )
+ * )
+ */
+Flight::route('GET /matches', function() {
+    Flight::json(Flight::matchesService()->getAll());
+});
+
+
 // Matches for a given league
 /**
  * @OA\Get(
@@ -92,9 +114,13 @@ Flight::route('GET /matches/@id', function($id) {
  * )
  */
 Flight::route('POST /matches', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchesService()->insertMatch($data));
 });
+
+
+
 
 // Update match
 /**
@@ -138,6 +164,7 @@ Flight::route('POST /matches', function() {
  * )
  */
 Flight::route('PUT /matches/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchesService()->updateMatch((int)$id, $data));
 });
@@ -171,5 +198,6 @@ Flight::route('PUT /matches/@id', function($id) {
  * )
  */
 Flight::route('DELETE /matches/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::matchesService()->deleteMatch((int)$id));
 });

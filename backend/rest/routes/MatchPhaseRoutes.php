@@ -77,6 +77,7 @@ Flight::route('GET /match-phases/@id', function($id) {
  * )
  */
 Flight::route('POST /match-phases', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchPhaseService()->insertPhase($data));
 });
@@ -115,6 +116,7 @@ Flight::route('POST /match-phases', function() {
  * )
  */
 Flight::route('PUT /match-phases/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::matchPhaseService()->updatePhase((int)$id, $data));
 });
@@ -148,5 +150,6 @@ Flight::route('PUT /match-phases/@id', function($id) {
  * )
  */
 Flight::route('DELETE /match-phases/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::matchPhaseService()->deletePhase((int)$id));
 });

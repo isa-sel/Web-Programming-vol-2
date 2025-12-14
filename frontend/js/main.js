@@ -12,6 +12,8 @@ $(document).ready(function () {
       console.log('Home created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Home ready!');
     }
   });
@@ -23,7 +25,8 @@ $(document).ready(function () {
       console.log('Teams created!');
     },
     onReady: function() {
-      console.log('Teams ready!');
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
     }
   });
 
@@ -34,7 +37,10 @@ $(document).ready(function () {
       console.log('Players created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Players ready!');
+      
     }
   });
 
@@ -45,6 +51,8 @@ $(document).ready(function () {
       console.log('Matches created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Matches ready!');
     }
   });
@@ -56,6 +64,8 @@ $(document).ready(function () {
       console.log('Venues created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Venues ready!');
     }
   });
@@ -67,6 +77,8 @@ $(document).ready(function () {
       console.log('Login created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Login ready!');
     }
   });
@@ -78,6 +90,8 @@ $(document).ready(function () {
       console.log('Register created!');
     },
     onReady: function() {
+      UserService.updateNavigation();
+      UserService.checkAdminButtons();
       console.log('Register ready!');
     }
   });

@@ -1,7 +1,24 @@
 <?php
+
+
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS, PATCH');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, Authentication, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
+
+// Handle preflight OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+
+
 require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/data/roles.php';
 
 // Services
+require_once __DIR__ . '/rest/services/AuthService.php';
 require_once __DIR__ . '/rest/services/LeagueService.php';
 require_once __DIR__ . '/rest/services/LeaguePhaseService.php';
 require_once __DIR__ . '/rest/services/TeamsService.php';
@@ -14,7 +31,18 @@ require_once __DIR__ . '/rest/services/AgeCategoryService.php';
 require_once __DIR__ . '/rest/services/GenderService.php';
 require_once __DIR__ . '/rest/services/UsersService.php';
 
+require_once __DIR__ . '/middleware/AuthMiddleware.php';
+
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 // Register services
+Flight::register('auth_service', "AuthService");
 Flight::register('leagueService', 'LeagueService');
 Flight::register('leaguePhaseService', 'LeaguePhaseService');
 Flight::register('teamsService', 'TeamsService');
@@ -27,7 +55,59 @@ Flight::register('ageCategoryService', 'AgeCategoryService');
 Flight::register('genderService', 'GenderService');
 Flight::register('usersService', 'UsersService');
 
+Flight::register('auth_middleware', "AuthMiddleware");
+
+
+Flight::route('/*', function() {
+   if(
+       strpos(Flight::request()->url, '/auth/login') === 0 ||
+       strpos(Flight::request()->url, '/auth/register') === 0
+   ) {
+       return TRUE;
+   } else {
+       try {
+           $token = Flight::request()->getHeader("Authentication");
+           if(Flight::auth_middleware()->verifyToken($token))
+               return TRUE;
+       } catch (\Exception $e) {
+           Flight::halt(401, $e->getMessage());
+       }
+   }
+});
+
+
+
+
+
+// This wildcard route intercepts all requests and applies authentication checks before proceeding.
+/*Flight::route('/*', function() {
+   if(
+       strpos(Flight::request()->url, '/auth/login') === 0 ||
+       strpos(Flight::request()->url, '/auth/register') === 0
+   ) {
+       return TRUE;
+   } else {
+       try {
+           $token = Flight::request()->getHeader("Authentication");
+           if(!$token)
+               Flight::halt(401, "Missing authentication header");
+
+
+           $decoded_token = JWT::decode($token, new Key(Config::JWT_SECRET(), 'HS256'));
+
+
+           Flight::set('user', $decoded_token->user);
+           Flight::set('jwt_token', $token);
+           return TRUE;
+       } catch (\Exception $e) {
+           Flight::halt(401, $e->getMessage());
+       }
+   }
+});
+*/
+
 // Routes
+require_once __DIR__ . '/rest/routes/AuthRoutes.php';
 require_once __DIR__ . '/rest/routes/LeagueRoutes.php';
 require_once __DIR__ . '/rest/routes/LeaguePhaseRoutes.php';
 require_once __DIR__ . '/rest/routes/TeamsRoutes.php';
