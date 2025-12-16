@@ -18,6 +18,7 @@ use OpenApi\Annotations as OA;
  * )
  */
 Flight::route('GET /users', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::usersService()->getAll());
 });
 
@@ -48,6 +49,7 @@ Flight::route('GET /users', function() {
  * )
  */
 Flight::route('GET /users/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::usersService()->publicById((int)$id));
 });
 
@@ -101,15 +103,26 @@ Flight::route('GET /user', function() {
  *         required=true,
  *         @OA\JsonContent(
  *             type="object",
- *             required={"username","password_hash"},
+ *             required={"username","email","password"},
  *             @OA\Property(property="username", type="string", example="admin"),
- *             @OA\Property(property="email", type="string", format="email", nullable=true, example="admin@example.com"),
- *             @OA\Property(property="role", type="string", nullable=true, example="admin"),
- *             @OA\Property(property="password_hash", type="string", example="$2y$10$...hashed...")
+ *             @OA\Property(property="email", type="string", format="email", example="admin@example.com"),
+ *             @OA\Property(
+ *                 property="password",
+ *                 type="string",
+ *                 format="password",
+ *                 example="StrongPass123!",
+ *                 description="Plaintext password that will be hashed on the server"
+ *             ),
+ *             @OA\Property(
+ *                 property="role",
+ *                 type="string",
+ *                 nullable=true,
+ *                 example="user"
+ *             )
  *         )
  *     ),
  *     @OA\Response(
- *         response=200,
+ *         response=201,
  *         description="User created",
  *         @OA\JsonContent(ref="#/components/schemas/User")
  *     ),
@@ -120,10 +133,46 @@ Flight::route('GET /user', function() {
  *     )
  * )
  */
+
 Flight::route('POST /users', function() {
     $data = Flight::request()->data->getData();
-    Flight::json(Flight::usersService()->insertUser($data));
+
+    // Validate required fields
+    if (!isset($data['username'], $data['email'], $data['password'])) {
+        Flight::json(['error' => 'username, email and password are required'], 400);
+        return;
+    }
+
+    // Prepare data for DB
+    $user = [
+        'username'      => $data['username'],
+        'email'         => $data['email'],
+        'password_hash' => password_hash($data['password'], PASSWORD_BCRYPT),
+        'role'          => $data['role'] ?? 'user'
+    ];
+
+    try {
+        // Insert → returns ID (not array!)
+        $id = Flight::usersService()->insertUser($user);
+
+        // Remove sensitive field before responding
+        unset($user['password_hash']);
+        $user['id'] = $id;
+
+        Flight::json($user, 201);
+
+    } catch (PDOException $e) {
+        // Duplicate username or email
+        if ($e->getCode() === '23000') {
+            Flight::json(['error' => 'Username or email already exists'], 409);
+            return;
+        }
+
+        throw $e; // other DB errors
+    }
 });
+
+
 
 // Update user
 /**

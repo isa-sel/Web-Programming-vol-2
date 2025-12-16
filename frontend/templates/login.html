@@ -13,17 +13,12 @@
           <form id="loginForm">
             <div class="form-group">
               <label for="email">Email adresa</label>
-              <input type="email" class="form-control" id="email" placeholder="Unesite email" required>
+              <input type="email" class="form-control" name="email" id="email" placeholder="Unesite email" required>
             </div>
             
             <div class="form-group">
               <label for="password">Lozinka</label>
-              <input type="password" class="form-control" id="password" placeholder="Unesite lozinku" required>
-            </div>
-            
-            <div class="form-group form-check">
-              <input type="checkbox" class="form-check-input" id="rememberMe">
-              <label class="form-check-label" for="rememberMe">Zapamti me</label>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Unesite lozinku" required>
             </div>
             
             <button type="submit" class="btn btn-info btn-block">Prijava</button>
@@ -37,3 +32,55 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    // Check if already logged in
+    const token = localStorage.getItem("user_token");
+    if (token) {
+      window.location.hash = "#home";
+      return;
+    }
+
+    $("#loginForm").validate({
+      submitHandler: function(form) {
+        const formData = {
+          email: $("#email").val(),
+          password: $("#password").val()
+        };
+
+        $.blockUI({ message: '<h3>Prijavljivanje...</h3>' });
+
+        $.ajax({
+          url: Constants.PROJECT_BASE_URL + "auth/login",
+          type: "POST",
+          data: JSON.stringify(formData),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(result) {
+            $.unblockUI();
+            if (result.data && result.data.token) {
+              localStorage.setItem("user_token", result.data.token);
+              toastr.success("Uspješno ste se prijavili!");
+              
+              // UPDATE NAVIGATION IMMEDIATELY
+              UserService.updateNavigation();
+              
+              // Redirect to home
+              setTimeout(function() {
+                window.location.hash = "#home";
+              }, 500);
+            } else {
+              toastr.error("Greška prilikom prijave");
+            }
+          },
+          error: function(xhr) {
+            $.unblockUI();
+            const errorMsg = xhr.responseJSON?.error || "Pogrešan email ili lozinka";
+            toastr.error(errorMsg);
+          }
+        });
+      }
+    });
+  });
+</script>

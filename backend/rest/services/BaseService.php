@@ -13,13 +13,13 @@ class BaseService {
 
     // GENERIČNE METODE ZA SERVISE (snake_case izvana):
 
-    public function get_all()
+    public function getAll()
     {
         // Dao vjerovatno ima getAll()
         return $this->dao->getAll();
     }
 
-    public function get_by_id($id)
+    public function getById($id)
     {
         // Dao vjerovatno ima getById($id)
         return $this->dao->getById($id);

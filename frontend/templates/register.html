@@ -8,32 +8,23 @@
         <div class="card-body p-4">
           <form id="registerForm">
             <div class="form-group">
-              <label for="fullName">Ime i prezime</label>
-              <input type="text" class="form-control" id="fullName" placeholder="Unesite vaše ime i prezime" required>
+              <label for="username">Korisničko ime</label>
+              <input type="text" class="form-control" name="username" id="username" placeholder="Unesite korisničko ime" required>
             </div>
             
             <div class="form-group">
               <label for="email">Email adresa</label>
-              <input type="email" class="form-control" id="email" placeholder="Unesite email" required>
+              <input type="email" class="form-control" name="email" id="email" placeholder="Unesite email" required>
             </div>
             
             <div class="form-group">
               <label for="password">Lozinka</label>
-              <input type="password" class="form-control" id="password" placeholder="Unesite lozinku" required>
+              <input type="password" class="form-control" name="password" id="password" placeholder="Unesite lozinku" required minlength="6">
             </div>
             
             <div class="form-group">
               <label for="confirmPassword">Potvrdite lozinku</label>
-              <input type="password" class="form-control" id="confirmPassword" placeholder="Potvrdite lozinku" required>
-            </div>
-            
-            <div class="form-group">
-              <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input" id="agreeTerms" required>
-                <label class="custom-control-label" for="agreeTerms">
-                  Slažem se sa uslovima korištenja
-                </label>
-              </div>
+              <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Potvrdite lozinku" required>
             </div>
             
             <button type="submit" class="btn btn-info btn-block">Registrujte se</button>
@@ -47,3 +38,47 @@
     </div>
   </div>
 </div>
+
+<script>
+  $(document).ready(function() {
+    $("#registerForm").validate({
+      rules: {
+        confirmPassword: {
+          equalTo: "#password"
+        }
+      },
+      messages: {
+        confirmPassword: {
+          equalTo: "Lozinke se ne poklapaju"
+        }
+      },
+      submitHandler: function(form) {
+        const formData = {
+          username: $("#username").val(),
+          email: $("#email").val(),
+          password: $("#password").val()
+        };
+
+        $.blockUI({ message: '<h3>Registracija...</h3>' });
+
+        $.ajax({
+          url: Constants.PROJECT_BASE_URL + "auth/register",
+          type: "POST",
+          data: JSON.stringify(formData),
+          contentType: "application/json",
+          dataType: "json",
+          success: function(result) {
+            $.unblockUI();
+            toastr.success("Uspješno ste se registrovali! Molimo prijavite se.");
+            window.location.hash = "#login";
+          },
+          error: function(xhr) {
+            $.unblockUI();
+            const errorMsg = xhr.responseJSON?.error || "Greška prilikom registracije";
+            toastr.error(errorMsg);
+          }
+        });
+      }
+    });
+  });
+</script>

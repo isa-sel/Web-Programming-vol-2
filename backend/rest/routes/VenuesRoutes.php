@@ -77,6 +77,7 @@ Flight::route('GET /venues/@id', function($id) {
  * )
  */
 Flight::route('POST /venues', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::venuesService()->insertVenue($data));
 });
@@ -117,6 +118,7 @@ Flight::route('POST /venues', function() {
  * )
  */
 Flight::route('PUT /venues/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::venuesService()->updateVenue((int)$id, $data));
 });
@@ -149,5 +151,6 @@ Flight::route('PUT /venues/@id', function($id) {
  * )
  */
 Flight::route('DELETE /venues/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::venuesService()->deleteVenue((int)$id));
 });

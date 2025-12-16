@@ -74,6 +74,7 @@ Flight::route('GET /pairs/@id', function($id) {
  * )
  */
 Flight::route('POST /pairs', function() {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::pairsService()->insertPair($data));
 });
@@ -112,6 +113,7 @@ Flight::route('POST /pairs', function() {
  * )
  */
 Flight::route('PUT /pairs/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
     Flight::json(Flight::pairsService()->updatePair((int)$id, $data));
 });
@@ -144,5 +146,6 @@ Flight::route('PUT /pairs/@id', function($id) {
  * )
  */
 Flight::route('DELETE /pairs/@id', function($id) {
+    Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     Flight::json(Flight::pairsService()->deletePair((int)$id));
 });

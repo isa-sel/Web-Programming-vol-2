@@ -10,15 +10,15 @@ class VenuesService extends BaseService
         parent::__construct($dao);
     }
 
-    public function getAll() {
-        return $this->get_all();
+    /*public function getAll() {
+        return $this->getAll();
     }
 
-    public function getById(int $id) {
-        return $this->get_by_id($id);
+    public function getById($id) {
+        return $this->getById($id);
     }
-
-    public function insertVenue(array $data) {
+*/
+    public function insertVenue($data) {
         return $this->insert($data);
     }
 
