@@ -40,7 +40,7 @@ let MatchService = {
         console.log("Fetching matches..."); // DEBUG
         
         RestClient.get("matches", function(data) {
-            console.log("✅ Matches received:", data); // DEBUG
+            console.log(" Matches received:", data); // DEBUG
 
             // Ako API vraća {data:[...]} normalizuj
             const matches = Array.isArray(data) ? data : (data.data || []);
@@ -96,7 +96,7 @@ let MatchService = {
                 });
             }
 
-            // === Jednostavna funkcija za ažuriranje brojki na karticama ===
+          
             function updateMatchStats(matches) {
                 let upcoming = 0;
                 let finished = 0;

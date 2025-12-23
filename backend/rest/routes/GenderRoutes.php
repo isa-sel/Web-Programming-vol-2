@@ -16,7 +16,7 @@ use OpenApi\Annotations as OA;
  * )
  */
 Flight::route('GET /genders', function() {
-    Flight::json(Flight::genderService()->get_all());
+    Flight::json(Flight::genderService()->getAll());
 });
 
 /**
