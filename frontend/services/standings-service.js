@@ -55,14 +55,14 @@ const StandingsService = {
   updateCardsFromStandings(rows) {
     const played = rows.reduce((s,r)=> s + Number(r.played||0), 0);
     const goals  = rows.reduce((s,r)=> s + Number(r.goals_for||0), 0);
-    const gpm    = played ? (goals / played).toFixed(1) : '–';
+    const gpm    = played ? (goals / played).toFixed(1) : '-';
 
     // rounds_left: ako backend šalje "rounds_left" globalno, ovdje ga postavi;
     // ako ne, ostavi '–' ili računaj iz /matches (fallback grana to radi)
     document.getElementById('stat-played').textContent = played;
     document.getElementById('stat-goals').textContent  = goals;
     document.getElementById('stat-gpm').textContent    = gpm;
-    document.getElementById('stat-rounds-left').textContent = '–';
+    document.getElementById('stat-rounds-left').textContent = '-';
   },
 
   // Kartice kad računamo iz /matches
