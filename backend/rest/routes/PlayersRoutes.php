@@ -121,7 +121,7 @@ Flight::route('POST /players', function() {
 Flight::route('PUT /players/@id', function($id) {
     Flight::auth_middleware()->authorizeRole(Roles::ADMIN);
     $data = Flight::request()->data->getData();
-    Flight::json(Flight::playersService()->updatePlayer((int)$id, $data));
+    Flight::json(Flight::playersService()->updatePlayer($id, $data));
 });
 
 /**

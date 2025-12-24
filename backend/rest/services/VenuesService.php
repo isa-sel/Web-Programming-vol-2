@@ -19,10 +19,24 @@ class VenuesService extends BaseService
     }
 */
     public function insertVenue($data) {
+        if (empty($data['name'])) {
+            throw new Exception("Venue name is required.", 400);
+        }
+        if (strlen($data['name']) > 100) {
+            throw new Exception("Venue name cannot exceed 100 characters.", 400);
+        }
+        $data['name'] = trim($data['name']);
         return $this->insert($data);
     }
 
     public function updateVenue(int $id, array $data) {
+        if (empty($data['name'])) {
+            throw new Exception("Venue name is required.", 400);
+        }
+        if (strlen($data['name']) > 100) {
+            throw new Exception("Venue name cannot exceed 100 characters.", 400);
+        }
+        $data['name'] = trim($data['name']);
         return $this->update($data, $id);
     }
 
