@@ -7,9 +7,7 @@ class MatchesDao extends BaseDao {
         parent::__construct("matches"); 
     }
 
-    /**
-     * Override getAll() to include JOINs
-     */
+    
     public function getAll(): array {
         $query = "SELECT m.*, 
                     v.name AS venue_name,
@@ -28,9 +26,7 @@ class MatchesDao extends BaseDao {
         return $this->query($query, []);
     }
 
-    /**
-     * Override getById() to include JOINs
-     */
+    
     public function getById(int $id): ?array {
         $query = "SELECT m.*, 
                     v.name AS venue_name,
@@ -49,9 +45,7 @@ class MatchesDao extends BaseDao {
         return $this->query_unique($query, ['id' => $id]);
     }
 
-    /**
-     * Get matches by league (your existing method)
-     */
+    
     public function listByLeague(int $league_id): array {
         $query = "SELECT m.*, 
                     v.name AS venue_name,
